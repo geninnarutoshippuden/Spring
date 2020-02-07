@@ -1,5 +1,8 @@
+import controllers.HelloController;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,5 +16,7 @@ public class Main {
         System.out.println(musicPlayer2.getVolume());
 
         context.close();
+
+        System.out.println(Arrays.toString(HelloController.class.getAnnotatedInterfaces()));
     }
 }
