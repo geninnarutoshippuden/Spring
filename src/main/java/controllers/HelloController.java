@@ -3,17 +3,13 @@ package controllers;
 import models.Employee;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Controller
 @ControllerAdvice
@@ -92,7 +88,7 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
         return modelAndView;
     }
 
-//    @GetMapping("/hello/employee")
+    @GetMapping("/hello/employee")
     public ModelAndView helloEmployee(Model model) {
         ModelAndView modelAndView = new ModelAndView("hello");
         Employee employee = new Employee();
@@ -104,10 +100,35 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
     }
 
 
-    @GetMapping("/hello/employee")
+//    @GetMapping("/hello/employee")
     public String helloEmployee2(@ModelAttribute("defaultEmp") Employee employee) {
        employee.setName("John Smith");
        return "hello";
+    }
+
+    @RequestMapping(value = "/hello/{emp}", method = RequestMethod.GET)
+    public String helloEmployee3(@MatrixVariable Integer id, @MatrixVariable String name,
+                                 @MatrixVariable Number[] numbers,
+                                 Model model,
+                                 @PathVariable("emp") String path,
+                                 HttpServletRequest request) {
+        Employee employee = new Employee();
+        employee.setName(name);
+        employee.setId(1);
+        model.addAttribute("emp", employee);
+        return "hello";
+    }
+
+    @RequestMapping(value = "/hello/companyEmployee/{comp}/{emp}", method = RequestMethod.GET)
+    public String helloEmployee4(@MatrixVariable(value = "name", pathVar = "comp") String name,
+                                 Model model,
+                                 @PathVariable("emp") String emp,
+                                 HttpServletRequest request) {
+        Employee employee = new Employee();
+        employee.setName(name);
+        employee.setId(Integer.parseInt("3"));
+        model.addAttribute("emp", employee);
+        return "hello";
     }
 
 

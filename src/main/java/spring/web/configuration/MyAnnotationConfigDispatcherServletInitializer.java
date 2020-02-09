@@ -13,12 +13,12 @@ public class MyAnnotationConfigDispatcherServletInitializer extends AbstractAnno
     @Nullable
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[] {ServletWebAppConfig.class};
+        return new Class<?>[] {RootWebAppConfig.class};
     }
 
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] {RootWebAppConfig.class};
+        return new Class<?>[] {ServletWebAppConfig.class};
     }
 }
