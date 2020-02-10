@@ -1,6 +1,6 @@
 package spring.web.configuration;
 
-import org.springframework.lang.Nullable;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class MyAnnotationConfigDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -10,13 +10,13 @@ public class MyAnnotationConfigDispatcherServletInitializer extends AbstractAnno
         return new String[] {"/"};
     }
 
-    @Nullable
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
         return new Class<?>[] {ServletWebAppConfig.class};
     }
 
-    @Nullable
+
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return new Class<?>[] {RootWebAppConfig.class};
