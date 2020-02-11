@@ -24,6 +24,7 @@ import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 import java.security.Principal;
 import java.util.Map;
@@ -132,7 +133,7 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
 
     @RequestMapping(value = "/hello/{emp}", method = RequestMethod.GET)
     public String helloEmployee3(@MatrixVariable Integer id, @MatrixVariable String name,
-                                 @MatrixVariable Number[] numbers,
+                                 @MatrixVariable List<Integer> numbers,
                                  Model model,
                                  @PathVariable("emp") String path,
                                  HttpServletRequest request) {
