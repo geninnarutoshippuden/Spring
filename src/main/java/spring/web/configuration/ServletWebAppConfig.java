@@ -1,9 +1,13 @@
 package spring.web.configuration;
 
 import controllers.HelloController;
+import models.Employee;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,6 +15,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerAdapter;
@@ -33,6 +38,9 @@ import org.springframework.web.util.UrlPathHelper;
 
 import java.util.List;
 
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSION;
+
 @Configuration
 @ComponentScan(basePackages = {"controllers"})
 @EnableWebMvc
@@ -47,6 +55,12 @@ public class ServletWebAppConfig extends WebMvcConfigurationSupport {
         UrlPathHelper urlPathHelper = super.mvcUrlPathHelper();
         urlPathHelper.setRemoveSemicolonContent(false);
         configurer.setUrlPathHelper(urlPathHelper);
+    }
+
+    @Bean
+    @Scope(value = SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public Employee employee() {
+        return new Employee(1, "aa");
     }
 
 

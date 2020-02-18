@@ -1,11 +1,12 @@
 package controllers;
 
 import models.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,19 +17,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Map;
 
 @Controller
 @ControllerAdvice
+//@SessionAttributes("session_emp")
 public class HelloController implements org.springframework.web.servlet.mvc.Controller {
+
+    @Autowired
+    private Employee employee;
+
+    @RequestMapping(value = "input/session_emp", method = RequestMethod.POST)
+    public ResponseEntity<String> addToSpringSession(@RequestBody Employee employee, Model model) {
+        model.addAttribute("session_emp", employee);
+        model.addAttribute("not_session_emp", employee);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "input/http_session_emp", method = RequestMethod.POST)
+    public ResponseEntity<String> addToHttpSession(@RequestBody Employee employee, HttpSession session) {
+        session.setAttribute("http_session_emp", employee);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "input/bean_session_emp", method = RequestMethod.POST)
+    public ResponseEntity<String> addToSessionBean(@RequestBody Employee emp, Model model) {
+        employee.setId(emp.getId());
+        employee.setName(emp.getName());
+        model.addAttribute("employee", employee);
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
     public ModelAndView hello1() {
         ModelAndView modelAndView = new ModelAndView("hello");
@@ -141,11 +172,17 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
     }
 
     @RequestMapping(value = "/input/hello", method = RequestMethod.POST)
-    public /*@ResponseBody*/ String input2(Model model, @RequestParam Map<String, String> map, HttpServletRequest request,
-                @RequestBody Employee employee) {
+    public @ResponseBody Employee input2(Model model, @RequestParam Map<String, String> map,
+                                         HttpServletRequest request, HttpSession session,
+                                         @ModelAttribute("session_emp") Employee sessionEmp, @ModelAttribute("not_session_emp") Employee notSessionEmp) {
+        return sessionEmp;
+    }
 
-        model.addAttribute("emp", employee);
-        return "hello";
+    @RequestMapping(value = "/input/session", method = RequestMethod.POST)
+    public @ResponseBody Employee getSessionEmp(Model model, @RequestParam Map<String, String> map,
+                                                HttpServletRequest request, HttpSession session,
+                                                SessionStatus sessionStatus) {
+        return (Employee) employee;
     }
 
 
