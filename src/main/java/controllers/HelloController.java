@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -141,7 +143,7 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
         return modelAndView;
     }
 
-//    @GetMapping("/hello/employee")
+    @GetMapping("/hello/employee")
     public ModelAndView helloEmployee(Model model) {
         ModelAndView modelAndView = new ModelAndView("hello");
         Employee employee = new Employee();
@@ -153,10 +155,35 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
     }
 
 
-    @GetMapping("/hello/employee")
+//    @GetMapping("/hello/employee")
     public String helloEmployee2(@ModelAttribute("defaultEmp") Employee employee) {
        employee.setName("John Smith");
        return "hello";
+    }
+
+    @RequestMapping(value = "/hello/{emp}", method = RequestMethod.GET)
+    public String helloEmployee3(@MatrixVariable Integer id, @MatrixVariable String name,
+                                 @MatrixVariable List<Integer> numbers,
+                                 Model model,
+                                 @PathVariable("emp") String path,
+                                 HttpServletRequest request) {
+        Employee employee = new Employee();
+        employee.setName(name);
+        employee.setId(1);
+        model.addAttribute("emp", employee);
+        return "hello";
+    }
+
+    @RequestMapping(value = "/hello/companyEmployee/{comp}/{emp}", method = RequestMethod.GET)
+    public String helloEmployee4(@MatrixVariable(value = "name", pathVar = "comp") String name,
+                                 Model model,
+                                 @PathVariable("emp") String emp,
+                                 HttpServletRequest request) {
+        Employee employee = new Employee();
+        employee.setName(name);
+        employee.setId(Integer.parseInt("3"));
+        model.addAttribute("emp", employee);
+        return "hello";
     }
 
 
@@ -194,7 +221,7 @@ public class HelloController implements org.springframework.web.servlet.mvc.Cont
     }
 
     @ModelAttribute
-    public void addAttributes(Model model, HttpServletRequest request) {
+    public void addAttributes(Model model) {
         model.addAttribute("defaultMsg", "Message from method with @ModelAttribute annotation");
         Employee employee = new Employee();
         employee.setName("John");
